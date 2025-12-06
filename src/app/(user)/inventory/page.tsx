@@ -1,10 +1,10 @@
-export default function DashboardPage() {
+export default function InventoryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Inventory</h1>
         <p className="text-muted-foreground">
-          Overview of your business operations
+          Manage your ingredients, packaging, and supplies
         </p>
       </div>
       <div className="border-muted-foreground/25 flex h-64 items-center justify-center rounded-lg border border-dashed">

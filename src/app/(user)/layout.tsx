@@ -1,11 +1,15 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import Image from "next/image";
-import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { LogoutButton } from "@/components/auth/logout-button";
 import { SessionProvider } from "@/components/session-provider";
-import { ModeToggle } from "@/components/mode-toggle";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Separator } from "@/components/ui/separator";
+import { SidebarBreadcrumb } from "@/components/sidebar-breadcrumb";
 
 export default async function UserLayout({
   children,
@@ -24,28 +28,28 @@ export default async function UserLayout({
     id: session.user.id,
     name: session.user.name,
     email: session.user.email,
-    businessName: (session.user as { businessName?: string }).businessName,
+    businessName: session.user.businessName,
+    image: session.user.image,
   };
 
   return (
     <SessionProvider user={user}>
-      <div className="bg-background flex min-h-svh flex-col">
-        <header className="border-b">
-          <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.svg" alt="CRUMBS" width={32} height={32} />
-              <span className="text-xl font-bold">CRUMBS</span>
-            </Link>
-            <div className="flex items-center gap-2">
-              <LogoutButton />
-              <ModeToggle />
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="flex h-12 shrink-0 items-center gap-2 border-b">
+            <div className="flex items-center gap-2 px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator
+                orientation="vertical"
+                className="mr-2 data-[orientation=vertical]:h-4"
+              />
+              <SidebarBreadcrumb />
             </div>
-          </div>
-        </header>
-        <main className="flex-1 py-8">
-          <div className="mx-auto max-w-6xl px-4">{children}</div>
-        </main>
-      </div>
+          </header>
+          <main className="flex-1 p-6">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
     </SessionProvider>
   );
 }
