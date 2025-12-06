@@ -21,7 +21,7 @@ export default function Home() {
             </span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
-            <Button variant="ghost" asChild>
+            <Button variant="outline" asChild>
               <Link href="/login">Log in</Link>
             </Button>
             <Button asChild>
@@ -36,16 +36,20 @@ export default function Home() {
         <Image
           src="/logo.svg"
           alt="CRUMBS Logo"
-          width={120}
-          height={120}
+          width={140}
+          height={140}
           className="mb-6"
         />
-        <h1 className="text-foreground max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
-          AI-Assisted Costing, Pricing & Recipe Management for Food Businesses
+        <p className="text-muted-foreground mb-6 text-lg font-medium italic">
+          Because every bit counts
+        </p>
+        <h1 className="text-foreground max-w-4xl text-3xl font-bold sm:text-5xl">
+          AI-Assisted Costing, Pricing, Recipe & Inventory Management for Food
+          Businesses
         </h1>
         <p className="text-muted-foreground mt-4 max-w-lg text-lg">
-          Manage your inventory, create recipes with auto-calculated costs, and
-          track production — all in one place.
+          Manage your inventory, auto-calculate costs, and get AI-suggested
+          recipes and pricing — all in one place.
         </p>
         <div className="mt-8">
           <Button size="lg" asChild>

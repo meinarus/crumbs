@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CRUMBS",
   description:
-    "AI Assisted Costing, Pricing, Recipe, and Inventory Management System for Food Businesses",
+    "AI-Assisted Costing, Pricing, Recipe & Inventory Management for Food Businesses",
 };
 
 export default function RootLayout({
