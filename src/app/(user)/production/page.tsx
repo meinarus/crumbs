@@ -1,4 +1,7 @@
-export default function ProductionPage() {
+import { requireUserSession } from "@/lib/auth-helpers";
+
+export default async function ProductionPage() {
+  await requireUserSession();
   return (
     <div className="space-y-6">
       <div>

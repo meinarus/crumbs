@@ -1,4 +1,7 @@
-export default function InventoryPage() {
+import { requireUserSession } from "@/lib/auth-helpers";
+
+export default async function InventoryPage() {
+  await requireUserSession();
   return (
     <div className="space-y-6">
       <div>

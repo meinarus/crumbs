@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
-import { useSession } from "@/components/session-provider";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import CrumbsLogo from "@/components/crumbs-logo";
@@ -80,14 +79,23 @@ export const adminNavItems: NavItem[] = [
   },
 ];
 
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-  navItems: NavItem[];
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  businessName?: string | null;
+  image?: string | null;
+  role: string;
 };
 
-export function AppSidebar({ navItems, ...props }: AppSidebarProps) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  navItems: NavItem[];
+  user: User;
+};
+
+export function AppSidebar({ navItems, user, ...props }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useSession();
 
   const initials = user.name
     .split(" ")

@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
+import { requireAdminSession } from "@/lib/auth-helpers";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  await requireAdminSession();
   redirect("/admin/dashboard");
 }

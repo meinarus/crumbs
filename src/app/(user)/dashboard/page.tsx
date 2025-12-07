@@ -1,4 +1,7 @@
-export default function DashboardPage() {
+import { requireUserSession } from "@/lib/auth-helpers";
+
+export default async function DashboardPage() {
+  await requireUserSession();
   return (
     <div className="space-y-6">
       <div>

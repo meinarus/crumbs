@@ -1,4 +1,7 @@
-export default function AdminDashboardPage() {
+import { requireAdminSession } from "@/lib/auth-helpers";
+
+export default async function AdminDashboardPage() {
+  await requireAdminSession();
   return (
     <div className="space-y-6">
       <div>
