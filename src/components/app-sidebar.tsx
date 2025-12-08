@@ -104,7 +104,12 @@ export function AppSidebar({ navItems, user, ...props }: AppSidebarProps) {
     .toUpperCase()
     .slice(0, 2);
 
-  const headerSubtitle = user.role === "admin" ? "Admin" : user.businessName;
+  const headerSubtitle =
+    user.role === "superadmin"
+      ? "Super Admin"
+      : user.role === "admin"
+        ? "Admin"
+        : user.businessName;
 
   const handleLogout = async () => {
     await authClient.signOut();

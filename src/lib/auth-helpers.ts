@@ -11,6 +11,11 @@ export type SessionUser = {
   role: string;
 };
 
+// Helper to check if role is an admin role
+function isAdminRole(role: string | null | undefined): boolean {
+  return role === "admin" || role === "superadmin";
+}
+
 /**
  * For user pages - requires authenticated non-admin user.
  * Redirects to /login if not authenticated.
@@ -26,7 +31,7 @@ export async function requireUserSession(): Promise<SessionUser> {
     redirect("/login");
   }
 
-  if (session.user.role === "admin") {
+  if (isAdminRole(session.user.role)) {
     redirect("/admin/dashboard");
   }
 
@@ -54,7 +59,7 @@ export async function requireAdminSession(): Promise<SessionUser> {
     redirect("/login");
   }
 
-  if (session.user.role !== "admin") {
+  if (!isAdminRole(session.user.role)) {
     redirect("/dashboard");
   }
 
@@ -79,7 +84,7 @@ export async function requireNoSession(): Promise<void> {
   });
 
   if (session) {
-    if (session.user.role === "admin") {
+    if (isAdminRole(session.user.role)) {
       redirect("/admin/dashboard");
     } else {
       redirect("/dashboard");
