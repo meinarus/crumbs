@@ -11,7 +11,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -20,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import type { UserWithPlan } from "@/actions/admin";
 
 type EditUserDialogProps = {
@@ -111,10 +111,10 @@ export function EditUserDialog({
               Make changes to the {isAdmin ? "admin" : "user"} profile here.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <FieldGroup className="gap-4 py-4">
             {!isAdmin && (
-              <div className="grid gap-2">
-                <Label htmlFor="businessName">Business Name</Label>
+              <Field className="gap-2">
+                <FieldLabel htmlFor="businessName">Business Name</FieldLabel>
                 <Input
                   id="businessName"
                   value={businessName}
@@ -122,10 +122,12 @@ export function EditUserDialog({
                   placeholder={user?.businessName}
                   required
                 />
-              </div>
+              </Field>
             )}
-            <div className="grid gap-2">
-              <Label htmlFor="name">{isAdmin ? "Name" : "Owner Name"}</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="name">
+                {isAdmin ? "Name" : "Owner Name"}
+              </FieldLabel>
               <Input
                 id="name"
                 value={name}
@@ -133,10 +135,10 @@ export function EditUserDialog({
                 placeholder={user?.name}
                 required
               />
-            </div>
+            </Field>
             {isAdmin && (
-              <div className="grid gap-2">
-                <Label htmlFor="role">Role</Label>
+              <Field className="gap-2">
+                <FieldLabel htmlFor="role">Role</FieldLabel>
                 <Select value={role} onValueChange={setRole}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select role" />
@@ -146,11 +148,11 @@ export function EditUserDialog({
                     <SelectItem value="superadmin">Super Admin</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </Field>
             )}
-            <div className="grid gap-2">
+            <Field className="gap-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="email">Email</Label>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
                 {!isAdmin && (
                   <div className="flex items-center gap-2">
                     <Checkbox
@@ -158,12 +160,12 @@ export function EditUserDialog({
                       checked={emailVerified}
                       onCheckedChange={(checked) => setEmailVerified(!!checked)}
                     />
-                    <Label
+                    <label
                       htmlFor="emailVerified"
                       className="text-sm font-normal"
                     >
                       Verified
-                    </Label>
+                    </label>
                   </div>
                 )}
               </div>
@@ -175,11 +177,11 @@ export function EditUserDialog({
                 placeholder={user?.email}
                 required
               />
-            </div>
+            </Field>
             {!isAdmin && (
               <>
-                <div className="grid gap-2">
-                  <Label htmlFor="plan">Plan</Label>
+                <Field className="gap-2">
+                  <FieldLabel htmlFor="plan">Plan</FieldLabel>
                   <Select value={plan} onValueChange={setPlan}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a plan" />
@@ -189,21 +191,23 @@ export function EditUserDialog({
                       <SelectItem value="pro">Pro</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </Field>
                 {plan === "pro" && (
-                  <div className="grid gap-2">
-                    <Label htmlFor="planExpiresAt">Plan Expiry Date</Label>
+                  <Field className="gap-2">
+                    <FieldLabel htmlFor="planExpiresAt">
+                      Plan Expiry Date
+                    </FieldLabel>
                     <Input
                       id="planExpiresAt"
                       type="date"
                       value={planExpiresAt}
                       onChange={(e) => setPlanExpiresAt(e.target.value)}
                     />
-                  </div>
+                  </Field>
                 )}
               </>
             )}
-          </div>
+          </FieldGroup>
           <DialogFooter>
             <Button
               type="button"

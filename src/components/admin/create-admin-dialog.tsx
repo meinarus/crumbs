@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Plus, Eye, EyeOff } from "lucide-react";
 
 type CreateAdminDialogProps = {
@@ -60,9 +60,9 @@ export function CreateAdminDialog({ onSave }: CreateAdminDialogProps) {
             <DialogTitle>Create Admin</DialogTitle>
             <DialogDescription>Create a new admin user.</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="admin-name">Name</Label>
+          <FieldGroup className="gap-4 py-4">
+            <Field className="gap-2">
+              <FieldLabel htmlFor="admin-name">Name</FieldLabel>
               <Input
                 id="admin-name"
                 value={name}
@@ -70,9 +70,9 @@ export function CreateAdminDialog({ onSave }: CreateAdminDialogProps) {
                 placeholder="Admin name"
                 required
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="admin-email">Email</Label>
+            </Field>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="admin-email">Email</FieldLabel>
               <Input
                 id="admin-email"
                 type="email"
@@ -81,9 +81,9 @@ export function CreateAdminDialog({ onSave }: CreateAdminDialogProps) {
                 placeholder="admin@example.com"
                 required
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="admin-password">Password</Label>
+            </Field>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="admin-password">Password</FieldLabel>
               <div className="relative">
                 <Input
                   id="admin-password"
@@ -110,11 +110,8 @@ export function CreateAdminDialog({ onSave }: CreateAdminDialogProps) {
                   </span>
                 </Button>
               </div>
-              <p className="text-muted-foreground text-sm">
-                Must be at least 8 characters
-              </p>
-            </div>
-          </div>
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button
               type="button"

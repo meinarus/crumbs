@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import type { UserWithPlan } from "@/actions/admin";
 
 type BanUserDialogProps = {
@@ -59,20 +59,20 @@ export function BanUserDialog({
               until unbanned.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="banReason">Reason (optional)</Label>
+          <FieldGroup className="gap-4 py-4">
+            <Field className="gap-2">
+              <FieldLabel htmlFor="banReason">Reason (optional)</FieldLabel>
               <Input
                 id="banReason"
                 value={banReason}
                 onChange={(e) => setBanReason(e.target.value)}
                 placeholder="Enter ban reason..."
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="banDays">
+            </Field>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="banDays">
                 Duration in days (leave empty for permanent)
-              </Label>
+              </FieldLabel>
               <Input
                 id="banDays"
                 type="number"
@@ -81,8 +81,8 @@ export function BanUserDialog({
                 onChange={(e) => setBanDays(e.target.value)}
                 placeholder="e.g., 7"
               />
-            </div>
-          </div>
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button
               type="button"

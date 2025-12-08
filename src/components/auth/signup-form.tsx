@@ -7,7 +7,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
@@ -90,9 +95,9 @@ export function SignupForm({
                   Get started with CRUMBS for your food business
                 </p>
               </div>
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
+              <FieldGroup className="gap-4">
+                <Field className="gap-2" data-invalid={!!errors.name}>
+                  <FieldLabel htmlFor="name">Name</FieldLabel>
                   <Input
                     id="name"
                     name="name"
@@ -100,12 +105,10 @@ export function SignupForm({
                     placeholder="Your full name"
                     required
                   />
-                  {errors.name && (
-                    <p className="text-destructive text-sm">{errors.name}</p>
-                  )}
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="businessName">Business Name</Label>
+                  {errors.name && <FieldError>{errors.name}</FieldError>}
+                </Field>
+                <Field className="gap-2" data-invalid={!!errors.businessName}>
+                  <FieldLabel htmlFor="businessName">Business Name</FieldLabel>
                   <Input
                     id="businessName"
                     name="businessName"
@@ -114,13 +117,11 @@ export function SignupForm({
                     required
                   />
                   {errors.businessName && (
-                    <p className="text-destructive text-sm">
-                      {errors.businessName}
-                    </p>
+                    <FieldError>{errors.businessName}</FieldError>
                   )}
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                </Field>
+                <Field className="gap-2" data-invalid={!!errors.email}>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
                   <Input
                     id="email"
                     name="email"
@@ -128,12 +129,10 @@ export function SignupForm({
                     placeholder="you@example.com"
                     required
                   />
-                  {errors.email && (
-                    <p className="text-destructive text-sm">{errors.email}</p>
-                  )}
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
+                  {errors.email && <FieldError>{errors.email}</FieldError>}
+                </Field>
+                <Field className="gap-2" data-invalid={!!errors.password}>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
                   <div className="relative">
                     <Input
                       id="password"
@@ -158,24 +157,19 @@ export function SignupForm({
                       </span>
                     </Button>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    Must be at least 8 characters
-                  </p>
                   {errors.password && (
-                    <p className="text-destructive text-sm">
-                      {errors.password}
-                    </p>
+                    <FieldError>{errors.password}</FieldError>
                   )}
-                </div>
+                </Field>
                 {errors.root && (
-                  <p className="text-destructive text-center text-sm">
-                    {errors.root}
-                  </p>
+                  <FieldError className="text-center">{errors.root}</FieldError>
                 )}
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Signing up..." : "Sign up"}
-                </Button>
-              </div>
+                <Field>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? "Signing up..." : "Sign up"}
+                  </Button>
+                </Field>
+              </FieldGroup>
               <p className="text-muted-foreground text-center text-sm">
                 Already have an account?{" "}
                 <Link
