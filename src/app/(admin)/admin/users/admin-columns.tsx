@@ -43,11 +43,15 @@ export function getAdminColumns({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="-ml-3"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="font-medium">{row.getValue("name")}</span>
       ),
     },
     {
@@ -55,6 +59,7 @@ export function getAdminColumns({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="-ml-3"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
@@ -64,40 +69,50 @@ export function getAdminColumns({
     },
     {
       accessorKey: "role",
-      header: "Role",
+      header: () => <div className="text-center">Role</div>,
       cell: ({ row }) => {
         const role = row.getValue("role") as string;
         return (
-          <Badge variant={role === "superadmin" ? "default" : "secondary"}>
-            {role === "superadmin" ? "Super Admin" : "Admin"}
-          </Badge>
+          <div className="text-center">
+            <Badge variant={role === "superadmin" ? "default" : "secondary"}>
+              {role === "superadmin" ? "Super Admin" : "Admin"}
+            </Badge>
+          </div>
         );
       },
     },
     {
       accessorKey: "banned",
-      header: "Status",
+      header: () => <div className="text-center">Status</div>,
       cell: ({ row }) => {
         const banned = row.getValue("banned") as boolean;
         return (
-          <Badge variant={banned ? "destructive" : "default"}>
-            {banned ? "Banned" : "Active"}
-          </Badge>
+          <div className="text-center">
+            <Badge variant={banned ? "destructive" : "default"}>
+              {banned ? "Banned" : "Active"}
+            </Badge>
+          </div>
         );
       },
     },
     {
       accessorKey: "createdAt",
       header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Joined
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Joined
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       ),
-      cell: ({ row }) => formatDate(row.getValue("createdAt")),
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatDate(row.getValue("createdAt"))}
+        </div>
+      ),
     },
     {
       id: "actions",

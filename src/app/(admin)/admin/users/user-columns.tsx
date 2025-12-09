@@ -48,11 +48,15 @@ export function getUserColumns({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="-ml-3"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Business Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="font-medium">{row.getValue("businessName")}</span>
       ),
     },
     {
@@ -60,6 +64,7 @@ export function getUserColumns({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="-ml-3"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Owner Name
@@ -72,6 +77,7 @@ export function getUserColumns({
       header: ({ column }) => (
         <Button
           variant="ghost"
+          className="-ml-3"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
@@ -81,74 +87,96 @@ export function getUserColumns({
     },
     {
       accessorKey: "banned",
-      header: "Status",
+      header: () => <div className="text-center">Status</div>,
       cell: ({ row }) => {
         const banned = row.getValue("banned") as boolean;
         return (
-          <Badge variant={banned ? "destructive" : "default"}>
-            {banned ? "Banned" : "Active"}
-          </Badge>
+          <div className="text-center">
+            <Badge variant={banned ? "destructive" : "default"}>
+              {banned ? "Banned" : "Active"}
+            </Badge>
+          </div>
         );
       },
     },
     {
       accessorKey: "emailVerified",
-      header: "Verified",
+      header: () => <div className="text-center">Verified</div>,
       cell: ({ row }) => {
         const verified = row.getValue("emailVerified") as boolean;
         return (
-          <Badge variant={verified ? "default" : "secondary"}>
-            {verified ? "Yes" : "No"}
-          </Badge>
+          <div className="text-center">
+            <Badge variant={verified ? "default" : "secondary"}>
+              {verified ? "Yes" : "No"}
+            </Badge>
+          </div>
         );
       },
     },
     {
       accessorKey: "plan",
-      header: "Plan",
+      header: () => <div className="text-center">Plan</div>,
       cell: ({ row }) => {
         const user = row.original;
         const expired = isPlanExpired(user);
 
         if (user.plan === "free") {
-          return <Badge variant="secondary">Free</Badge>;
+          return (
+            <div className="text-center">
+              <Badge variant="secondary">Free</Badge>
+            </div>
+          );
         }
 
         if (expired) {
           return (
-            <Badge
-              variant="outline"
-              className="text-destructive border-destructive"
-            >
-              Pro (Expired)
-            </Badge>
+            <div className="text-center">
+              <Badge
+                variant="outline"
+                className="text-destructive border-destructive"
+              >
+                Pro (Expired)
+              </Badge>
+            </div>
           );
         }
 
-        return <Badge variant="default">Pro</Badge>;
+        return (
+          <div className="text-center">
+            <Badge variant="default">Pro</Badge>
+          </div>
+        );
       },
     },
     {
       accessorKey: "planExpiresAt",
-      header: "Expiry",
+      header: () => <div className="text-center">Expiry</div>,
       cell: ({ row }) => {
         const user = row.original;
-        if (user.plan === "free") return "—";
-        return formatDate(user.planExpiresAt);
+        if (user.plan === "free") return <div className="text-center">—</div>;
+        return (
+          <div className="text-center">{formatDate(user.planExpiresAt)}</div>
+        );
       },
     },
     {
       accessorKey: "createdAt",
       header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Joined
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Joined
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       ),
-      cell: ({ row }) => formatDate(row.getValue("createdAt")),
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatDate(row.getValue("createdAt"))}
+        </div>
+      ),
     },
     {
       id: "actions",
