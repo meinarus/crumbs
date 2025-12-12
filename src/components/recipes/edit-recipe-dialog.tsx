@@ -1,0 +1,336 @@
+"use client";
+
+import { useState, useTransition, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import { updateRecipeWithItems } from "@/actions/recipes";
+import { toast } from "sonner";
+import type { InventoryItem } from "@/actions/inventory";
+import type { RecipeWithItems } from "@/actions/recipes";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { compressAndConvertToBase64 } from "@/lib/image-utils";
+import { RecipeItemRow, type RecipeItemData } from "./recipe-item-row";
+
+type EditRecipeDialogProps = {
+  recipe: RecipeWithItems;
+  inventoryItems: InventoryItem[];
+};
+
+function formatQuantity(value: string): string {
+  const num = parseFloat(value);
+  if (isNaN(num)) return value;
+  return num.toString();
+}
+
+export function EditRecipeDialog({
+  recipe,
+  inventoryItems,
+}: EditRecipeDialogProps) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const [formData, setFormData] = useState({
+    name: recipe.name,
+    image: recipe.image ?? "",
+    instructions: recipe.instructions ?? "",
+  });
+
+  const initialIngredients = recipe.items
+    .filter((item) => item.inventory.category === "food")
+    .map((item) => ({
+      id: item.id,
+      inventoryId: item.inventoryId,
+      quantity: formatQuantity(item.quantity),
+    }));
+
+  const initialOthers = recipe.items
+    .filter((item) => item.inventory.category === "other")
+    .map((item) => ({
+      id: item.id,
+      inventoryId: item.inventoryId,
+      quantity: formatQuantity(item.quantity),
+    }));
+
+  const [ingredients, setIngredients] =
+    useState<RecipeItemData[]>(initialIngredients);
+  const [others, setOthers] = useState<RecipeItemData[]>(initialOthers);
+
+  const foodItems = useMemo(
+    () => inventoryItems.filter((item) => item.category === "food"),
+    [inventoryItems],
+  );
+
+  const otherItems = useMemo(
+    () => inventoryItems.filter((item) => item.category === "other"),
+    [inventoryItems],
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.name) {
+      toast.error("Please enter a recipe name.");
+      return;
+    }
+
+    const allItems = [...ingredients, ...others].filter(
+      (item) => item.inventoryId && item.quantity,
+    );
+
+    if (allItems.length === 0) {
+      toast.error("Please add at least one ingredient or other item.");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        await updateRecipeWithItems(recipe.id, {
+          name: formData.name,
+          instructions: formData.instructions || undefined,
+          image: formData.image || undefined,
+          items: allItems.map((item) => ({
+            inventoryId: item.inventoryId,
+            quantity: item.quantity,
+          })),
+        });
+        toast.success("Recipe updated successfully!");
+        setOpen(false);
+        router.refresh();
+      } catch {
+        toast.error("Failed to update recipe. Please try again.");
+      }
+    });
+  };
+
+  const addIngredient = () => {
+    setIngredients((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), inventoryId: "", quantity: "" },
+    ]);
+  };
+
+  const removeIngredient = (id: string) => {
+    setIngredients((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateIngredient = (
+    id: string,
+    field: "inventoryId" | "quantity",
+    value: string,
+  ) => {
+    setIngredients((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)),
+    );
+  };
+
+  const addOther = () => {
+    setOthers((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), inventoryId: "", quantity: "" },
+    ]);
+  };
+
+  const removeOther = (id: string) => {
+    setOthers((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateOther = (
+    id: string,
+    field: "inventoryId" | "quantity",
+    value: string,
+  ) => {
+    setOthers((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)),
+    );
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Pencil className="mr-2 h-4 w-4" />
+          Edit
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Edit Recipe</DialogTitle>
+          <DialogDescription>
+            Update the recipe details and ingredients.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit}>
+          <FieldGroup className="gap-4 py-4">
+            <Field className="gap-2">
+              <FieldLabel htmlFor="name">Name *</FieldLabel>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
+                placeholder="Recipe name"
+              />
+            </Field>
+
+            <Field className="gap-2">
+              <FieldLabel htmlFor="image">Recipe Image</FieldLabel>
+              <div className="space-y-2">
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+
+                    if (file.size > 2 * 1024 * 1024) {
+                      toast.error("Image must be less than 2MB");
+                      return;
+                    }
+
+                    try {
+                      const base64 = await compressAndConvertToBase64(file);
+                      setFormData((prev) => ({ ...prev, image: base64 }));
+                    } catch {
+                      toast.error("Failed to process image");
+                    }
+                  }}
+                />
+                {formData.image && (
+                  <div className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={formData.image}
+                      alt="Preview"
+                      className="h-32 w-full rounded-md border object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2 h-6 w-6"
+                      onClick={() =>
+                        setFormData((prev) => ({ ...prev, image: "" }))
+                      }
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </Field>
+
+            <Field className="gap-2">
+              <FieldLabel htmlFor="instructions">Instructions</FieldLabel>
+              <Textarea
+                id="instructions"
+                value={formData.instructions}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    instructions: e.target.value,
+                  }))
+                }
+                placeholder="Enter cooking instructions..."
+                className="min-h-[100px]"
+              />
+            </Field>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <FieldLabel>Ingredients</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addIngredient}
+                  disabled={foodItems.length === 0}
+                >
+                  <Plus className="mr-1 h-3 w-3" />
+                  Add
+                </Button>
+              </div>
+              {foodItems.length === 0 ? (
+                <p className="text-muted-foreground text-sm">
+                  No food items in inventory. Add some first.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {ingredients.map((item) => (
+                    <RecipeItemRow
+                      key={item.id}
+                      item={item}
+                      items={foodItems}
+                      onUpdate={updateIngredient}
+                      onRemove={removeIngredient}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <FieldLabel>Others</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addOther}
+                  disabled={otherItems.length === 0}
+                >
+                  <Plus className="mr-1 h-3 w-3" />
+                  Add
+                </Button>
+              </div>
+              {otherItems.length === 0 ? (
+                <p className="text-muted-foreground text-sm">
+                  No other items in inventory. Add some first.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {others.map((item) => (
+                    <RecipeItemRow
+                      key={item.id}
+                      item={item}
+                      items={otherItems}
+                      onUpdate={updateOther}
+                      onRemove={removeOther}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </FieldGroup>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

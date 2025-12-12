@@ -18,10 +18,10 @@ export const inventory = pgTable(
     }).notNull(),
     purchaseQuantity: numeric("purchase_quantity", {
       precision: 12,
-      scale: 4,
+      scale: 2,
     }).notNull(),
     unit: text("unit").notNull(),
-    stock: numeric("stock", { precision: 12, scale: 4 }).notNull(),
+    stock: numeric("stock", { precision: 12, scale: 2 }).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
