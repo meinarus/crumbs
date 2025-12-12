@@ -93,7 +93,7 @@ export function UnitCombobox({
           className={cn("justify-between", className)}
         >
           {selectedLabel}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">

@@ -57,7 +57,7 @@ export function getInventoryColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Item
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -78,7 +78,7 @@ export function getInventoryColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -107,7 +107,7 @@ export function getInventoryColumns({
             className="-mr-3"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <ArrowUpDown className="mr-2 h-4 w-4" />
+            <ArrowUpDown />
             Purchase Cost
           </Button>
         </div>
@@ -146,7 +146,7 @@ export function getInventoryColumns({
             className="-mr-3"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <ArrowUpDown className="mr-2 h-4 w-4" />
+            <ArrowUpDown />
             Unit Cost
           </Button>
         </div>
@@ -169,7 +169,7 @@ export function getInventoryColumns({
             className="-mr-3"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <ArrowUpDown className="mr-2 h-4 w-4" />
+            <ArrowUpDown />
             Stock
           </Button>
         </div>

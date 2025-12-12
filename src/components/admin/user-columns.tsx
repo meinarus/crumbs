@@ -52,7 +52,7 @@ export function getUserColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Business Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -73,7 +73,7 @@ export function getUserColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Owner Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -94,7 +94,7 @@ export function getUserColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -189,7 +189,7 @@ export function getUserColumns({
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Joined
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown />
           </Button>
         </div>
       ),

@@ -47,7 +47,7 @@ export function getAdminColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -68,7 +68,7 @@ export function getAdminColumns({
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown />
         </Button>
       ),
       cell: ({ row }) => (
@@ -117,7 +117,7 @@ export function getAdminColumns({
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Joined
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown />
           </Button>
         </div>
       ),

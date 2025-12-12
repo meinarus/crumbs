@@ -143,7 +143,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus />
           Create Recipe
         </Button>
       </DialogTrigger>
@@ -242,7 +242,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
                   onClick={addIngredient}
                   disabled={foodItems.length === 0}
                 >
-                  <Plus className="mr-1 h-3 w-3" />
+                  <Plus />
                   Add
                 </Button>
               </div>
@@ -275,7 +275,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
                   onClick={addOther}
                   disabled={otherItems.length === 0}
                 >
-                  <Plus className="mr-1 h-3 w-3" />
+                  <Plus />
                   Add
                 </Button>
               </div>
