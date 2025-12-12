@@ -3,7 +3,7 @@
 import { db } from "@/db/index";
 import { inventory } from "@/db/schema/inventory";
 import { requireUserSession } from "@/lib/auth-helpers";
-import { eq, and } from "drizzle-orm";
+import { eq, and, ilike } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -66,6 +66,23 @@ export async function addInventoryItem(data: AddInventoryData) {
   const validated = addInventorySchema.safeParse(data);
   if (!validated.success) {
     throw new Error(validated.error.issues[0]?.message ?? "Invalid input");
+  }
+
+  const duplicates = await db
+    .select()
+    .from(inventory)
+    .where(
+      and(
+        eq(inventory.userId, userId),
+        eq(inventory.unit, validated.data.unit),
+        ilike(inventory.name, validated.data.name),
+      ),
+    );
+
+  if (duplicates.length > 0) {
+    throw new Error(
+      `Item "${validated.data.name}" with unit "${validated.data.unit}" already exists.`,
+    );
   }
 
   const item = await db

@@ -83,8 +83,12 @@ export function AddInventoryDialog() {
         toast.success("Item added successfully!");
         setFormData(initialFormData);
         setOpen(false);
-      } catch {
-        toast.error("Failed to add item. Please try again.");
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Failed to add item. Please try again.",
+        );
       }
     });
   };
