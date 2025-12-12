@@ -5,7 +5,6 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  Row,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -58,16 +57,6 @@ export function DataTable<TData, TValue>({
 
   const isServerSide = !!onPageChange;
 
-  const globalFilterFn = React.useCallback(
-    (row: Row<TData>, columnId: string, filterValue: string) => {
-      const search = filterValue.trim().toLowerCase();
-      if (!search) return true;
-      const value = row.getValue(columnId);
-      return String(value).toLowerCase().includes(search);
-    },
-    [],
-  );
-
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -75,7 +64,6 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: isServerSide ? undefined : getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
