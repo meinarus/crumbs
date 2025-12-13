@@ -223,7 +223,7 @@ export function ProductionBatch({
         </Card>
       </div>
 
-      <div className={step === "select" ? "hidden lg:block" : ""}>
+      <div className={`min-w-0 ${step === "select" ? "hidden lg:block" : ""}`}>
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -273,9 +273,10 @@ export function ProductionBatch({
                           <Badge
                             key={recipeId}
                             variant="secondary"
-                            className="max-w-[200px] truncate"
+                            className="flex max-w-[200px] items-center gap-1"
                           >
-                            {recipe?.name} × {qty}
+                            <span className="truncate">{recipe?.name}</span>
+                            <span className="shrink-0">× {qty}</span>
                           </Badge>
                         );
                       })}
@@ -295,11 +296,11 @@ export function ProductionBatch({
                             d.insufficient ? "bg-destructive/10" : "bg-muted/50"
                           }`}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex min-w-0 flex-1 items-center gap-2">
                             {d.insufficient && (
                               <AlertTriangle className="text-destructive h-4 w-4" />
                             )}
-                            <span className="text-sm">{d.name}</span>
+                            <span className="truncate text-sm">{d.name}</span>
                           </div>
                           <div className="text-right text-sm">
                             <span
