@@ -54,7 +54,7 @@ export function CreateAdminDialog({ onSave }: CreateAdminDialogProps) {
           Add Admin
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create Admin</DialogTitle>

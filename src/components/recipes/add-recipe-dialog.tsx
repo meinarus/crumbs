@@ -155,7 +155,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
           Create Recipe
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Create Recipe</DialogTitle>
           <DialogDescription>

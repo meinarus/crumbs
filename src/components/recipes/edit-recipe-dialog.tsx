@@ -173,7 +173,7 @@ export function EditRecipeDialog({
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Edit Recipe</DialogTitle>
           <DialogDescription>

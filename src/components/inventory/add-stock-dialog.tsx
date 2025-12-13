@@ -52,7 +52,7 @@ export function AddStockDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add Stock: {item.name}</DialogTitle>
           <DialogDescription>
