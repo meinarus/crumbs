@@ -60,26 +60,23 @@ export function AddStockDialog({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Current Stock</Label>
-            <div className="text-muted-foreground col-span-3 text-sm font-medium">
+          <div className="grid gap-2">
+            <Label>Current Stock</Label>
+            <div className="text-muted-foreground text-sm font-medium">
               {parseFloat(item.stock).toLocaleString(undefined, {
                 maximumFractionDigits: 2,
               })}{" "}
               {item.unit}
             </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="add-stock-qty" className="text-right">
-              Quantity to Add *
-            </Label>
+          <div className="grid gap-2">
+            <Label htmlFor="add-stock-qty">Quantity to Add *</Label>
             <Input
               id="add-stock-qty"
               type="number"
               step="any"
               value={quantityToAdd}
               onChange={(e) => setQuantityToAdd(e.target.value)}
-              className="col-span-3"
               placeholder="0"
               autoFocus
             />
