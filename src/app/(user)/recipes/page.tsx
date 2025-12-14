@@ -1,15 +1,17 @@
 import { requireUserSession } from "@/lib/auth-helpers";
 import { getRecipes } from "@/actions/recipes";
 import { getInventoryItems } from "@/actions/inventory";
+import { getUserSettings } from "@/actions/settings";
 import { AddRecipeDialog } from "@/components/recipes/add-recipe-dialog";
 import { RecipesList } from "@/components/recipes/recipes-list";
 
 export default async function RecipesPage() {
   await requireUserSession();
 
-  const [recipes, inventoryItems] = await Promise.all([
+  const [recipes, inventoryItems, settings] = await Promise.all([
     getRecipes(),
     getInventoryItems(),
+    getUserSettings(),
   ]);
 
   return (
@@ -24,7 +26,7 @@ export default async function RecipesPage() {
         <AddRecipeDialog inventoryItems={inventoryItems} />
       </div>
 
-      <RecipesList recipes={recipes} />
+      <RecipesList recipes={recipes} currency={settings.currency} />
     </div>
   );
 }

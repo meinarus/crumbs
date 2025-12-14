@@ -27,7 +27,7 @@ export default async function RecipeDetailPage({ params }: Props) {
     <RecipeDetail
       recipe={recipe}
       inventoryItems={inventoryItems}
-      vatRate={settings.vatRate}
+      settings={settings}
     />
   );
 }

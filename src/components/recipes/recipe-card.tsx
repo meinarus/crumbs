@@ -5,6 +5,7 @@ import type { RecipeWithItems } from "@/actions/recipes";
 
 type RecipeCardProps = {
   recipe: RecipeWithItems;
+  currency: string;
 };
 
 function calculateUnitCost(
@@ -17,11 +18,14 @@ function calculateUnitCost(
   return cost / qty;
 }
 
-function formatCurrency(value: number): string {
-  return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+function formatCurrency(value: number, currency: string): string {
+  const formatted = value.toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+  });
+  return `${currency}${formatted}`;
 }
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export function RecipeCard({ recipe, currency }: RecipeCardProps) {
   const totalCost = recipe.items.reduce((sum, item) => {
     const unitCost = calculateUnitCost(
       item.inventory.purchaseCost,
@@ -58,10 +62,10 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           <h3 className="line-clamp-1 font-semibold">{recipe.name}</h3>
           <div className="mt-2 flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              Cost: {formatCurrency(totalCost)}
+              Cost: {formatCurrency(totalCost, currency)}
             </span>
             <span className="font-medium text-green-600 dark:text-green-400">
-              Price: {formatCurrency(finalSellingPrice)}
+              Price: {formatCurrency(finalSellingPrice, currency)}
             </span>
           </div>
           {margin > 0 && (

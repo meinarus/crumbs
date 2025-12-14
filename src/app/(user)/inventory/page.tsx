@@ -1,11 +1,15 @@
 import { getInventoryItems } from "@/actions/inventory";
+import { getUserSettings } from "@/actions/settings";
 import { requireUserSession } from "@/lib/auth-helpers";
 import { InventoryTable } from "@/components/inventory/inventory-table";
 import { AddInventoryDialog } from "@/components/inventory/add-inventory-dialog";
 
 export default async function InventoryPage() {
   await requireUserSession();
-  const items = await getInventoryItems();
+  const [items, settings] = await Promise.all([
+    getInventoryItems(),
+    getUserSettings(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -16,10 +20,10 @@ export default async function InventoryPage() {
             Manage your ingredients and supplies
           </p>
         </div>
-        <AddInventoryDialog />
+        <AddInventoryDialog currency={settings.currency} />
       </div>
 
-      <InventoryTable items={items} />
+      <InventoryTable items={items} currency={settings.currency} />
     </div>
   );
 }

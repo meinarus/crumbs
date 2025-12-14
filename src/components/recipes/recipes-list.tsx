@@ -7,9 +7,10 @@ import type { RecipeWithItems } from "@/actions/recipes";
 
 type RecipesListProps = {
   recipes: RecipeWithItems[];
+  currency: string;
 };
 
-export function RecipesList({ recipes }: RecipesListProps) {
+export function RecipesList({ recipes, currency }: RecipesListProps) {
   const [search, setSearch] = useState("");
 
   const filteredRecipes = useMemo(() => {
@@ -41,7 +42,7 @@ export function RecipesList({ recipes }: RecipesListProps) {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard key={recipe.id} recipe={recipe} currency={currency} />
           ))}
         </div>
       )}

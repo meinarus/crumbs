@@ -34,6 +34,10 @@ type FormData = {
   unit: string;
 };
 
+type AddInventoryDialogProps = {
+  currency: string;
+};
+
 const initialFormData: FormData = {
   name: "",
   category: "",
@@ -43,7 +47,7 @@ const initialFormData: FormData = {
   unit: "",
 };
 
-export function AddInventoryDialog() {
+export function AddInventoryDialog({ currency }: AddInventoryDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -53,8 +57,8 @@ export function AddInventoryDialog() {
     const qty = parseFloat(formData.purchaseQuantity);
     if (isNaN(cost) || isNaN(qty) || qty === 0) return "—";
     const unitCost = cost / qty;
-    return unitCost.toLocaleString(undefined, { maximumFractionDigits: 4 });
-  }, [formData.purchaseCost, formData.purchaseQuantity]);
+    return `${currency}${unitCost.toLocaleString(undefined, { maximumFractionDigits: 4 })}`;
+  }, [formData.purchaseCost, formData.purchaseQuantity, currency]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

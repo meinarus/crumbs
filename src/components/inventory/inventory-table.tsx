@@ -10,14 +10,16 @@ import { getInventoryColumns } from "./inventory-columns";
 
 type InventoryTableProps = {
   items: InventoryItem[];
+  currency: string;
 };
 
-export function InventoryTable({ items }: InventoryTableProps) {
+export function InventoryTable({ items, currency }: InventoryTableProps) {
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [deleteItem, setDeleteItem] = useState<InventoryItem | null>(null);
   const [addStockItem, setAddStockItem] = useState<InventoryItem | null>(null);
 
   const columns = getInventoryColumns({
+    currency,
     onEdit: setEditItem,
     onDelete: setDeleteItem,
     onAddStock: setAddStockItem,
@@ -36,6 +38,7 @@ export function InventoryTable({ items }: InventoryTableProps) {
         item={editItem}
         open={!!editItem}
         onOpenChange={(open) => !open && setEditItem(null)}
+        currency={currency}
       />
 
       <DeleteInventoryAlert

@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { InventoryItem } from "@/actions/inventory";
 
-function formatCurrency(value: string | number): string {
+function formatCurrency(value: string | number, currency: string): string {
   const num = typeof value === "string" ? parseFloat(value) : value;
-  if (isNaN(num)) return "0";
-  return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  if (isNaN(num)) return `${currency}0`;
+  const formatted = num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return `${currency}${formatted}`;
 }
 
 function formatQuantity(value: string | number): string {
@@ -29,20 +30,26 @@ function formatQuantity(value: string | number): string {
 function calculateUnitCost(
   purchaseCost: string,
   purchaseQuantity: string,
+  currency: string,
 ): string {
   const cost = parseFloat(purchaseCost);
   const qty = parseFloat(purchaseQuantity);
-  if (isNaN(cost) || isNaN(qty) || qty === 0) return "0";
-  return (cost / qty).toLocaleString(undefined, { maximumFractionDigits: 4 });
+  if (isNaN(cost) || isNaN(qty) || qty === 0) return `${currency}0`;
+  const unitCost = (cost / qty).toLocaleString(undefined, {
+    maximumFractionDigits: 4,
+  });
+  return `${currency}${unitCost}`;
 }
 
 type InventoryColumnsProps = {
+  currency: string;
   onEdit: (item: InventoryItem) => void;
   onDelete: (item: InventoryItem) => void;
   onAddStock: (item: InventoryItem) => void;
 };
 
 export function getInventoryColumns({
+  currency,
   onEdit,
   onDelete,
   onAddStock,
@@ -114,7 +121,7 @@ export function getInventoryColumns({
       ),
       cell: ({ row }) => (
         <div className="text-right">
-          {formatCurrency(row.getValue("purchaseCost"))}
+          {formatCurrency(row.getValue("purchaseCost"), currency)}
         </div>
       ),
     },
@@ -155,7 +162,11 @@ export function getInventoryColumns({
         const item = row.original;
         return (
           <div className="text-right">
-            {calculateUnitCost(item.purchaseCost, item.purchaseQuantity)}
+            {calculateUnitCost(
+              item.purchaseCost,
+              item.purchaseQuantity,
+              currency,
+            )}
           </div>
         );
       },

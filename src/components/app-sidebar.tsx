@@ -91,6 +91,7 @@ export type User = {
 
 type UserSettings = {
   vatRate: string;
+  currency: string;
 };
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
@@ -212,7 +213,7 @@ export function AppSidebar({
                 <DropdownMenuSeparator />
                 {settings && (
                   <>
-                    <SettingsDialog vatRate={settings.vatRate} />
+                    <SettingsDialog settings={settings} />
                     <DropdownMenuSeparator />
                   </>
                 )}

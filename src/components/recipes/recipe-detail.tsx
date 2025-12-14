@@ -4,11 +4,12 @@ import { EditRecipeDialog } from "./edit-recipe-dialog";
 import CrumbsLogo from "@/components/crumbs-logo";
 import type { RecipeWithItems } from "@/actions/recipes";
 import type { InventoryItem } from "@/actions/inventory";
+import type { UserSettings } from "@/actions/settings";
 
 type RecipeDetailProps = {
   recipe: RecipeWithItems;
   inventoryItems: InventoryItem[];
-  vatRate: string;
+  settings: UserSettings;
 };
 
 function calculateUnitCost(
@@ -27,14 +28,17 @@ function formatQuantity(value: string | number): string {
   return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }
 
-function formatCurrency(value: number): string {
-  return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+function formatCurrency(value: number, currency: string): string {
+  const formatted = value.toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+  });
+  return `${currency}${formatted}`;
 }
 
 export function RecipeDetail({
   recipe,
   inventoryItems,
-  vatRate,
+  settings,
 }: RecipeDetailProps) {
   const ingredients = recipe.items.filter(
     (item) => item.inventory.category === "ingredient",
@@ -111,7 +115,7 @@ export function RecipeDetail({
                         </span>
                       </div>
                       <span className="text-muted-foreground text-sm">
-                        {formatCurrency(itemCost)}
+                        {formatCurrency(itemCost, settings.currency)}
                       </span>
                     </div>
                   );
@@ -144,7 +148,7 @@ export function RecipeDetail({
                         </span>
                       </div>
                       <span className="text-muted-foreground text-sm">
-                        {formatCurrency(itemCost)}
+                        {formatCurrency(itemCost, settings.currency)}
                       </span>
                     </div>
                   );
@@ -155,7 +159,7 @@ export function RecipeDetail({
         </div>
 
         <div className="lg:sticky lg:top-6 lg:self-start">
-          <RecipeCosting recipe={recipe} vatRate={vatRate} />
+          <RecipeCosting recipe={recipe} settings={settings} />
         </div>
       </div>
     </div>

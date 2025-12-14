@@ -27,6 +27,7 @@ type EditInventoryDialogProps = {
   item: InventoryItem | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  currency: string;
 };
 
 type FormData = {
@@ -43,6 +44,7 @@ export function EditInventoryDialog({
   item,
   open,
   onOpenChange,
+  currency,
 }: EditInventoryDialogProps) {
   const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState<FormData>(() => ({
@@ -60,8 +62,8 @@ export function EditInventoryDialog({
     const qty = parseFloat(formData.purchaseQuantity);
     if (isNaN(cost) || isNaN(qty) || qty === 0) return "—";
     const unitCost = cost / qty;
-    return unitCost.toLocaleString(undefined, { maximumFractionDigits: 4 });
-  }, [formData.purchaseCost, formData.purchaseQuantity]);
+    return `${currency}${unitCost.toLocaleString(undefined, { maximumFractionDigits: 4 })}`;
+  }, [formData.purchaseCost, formData.purchaseQuantity, currency]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

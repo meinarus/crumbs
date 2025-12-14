@@ -7,6 +7,7 @@ export const userSettings = pgTable("user_settings", {
     .primaryKey()
     .references(() => user.id, { onDelete: "cascade" }),
   vatRate: text("vat_rate").notNull(),
+  currency: text("currency").notNull(),
 });
 
 export const userSettingsRelations = relations(userSettings, ({ one }) => ({

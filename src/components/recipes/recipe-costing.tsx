@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { updateRecipe } from "@/actions/recipes";
 import { toast } from "sonner";
 import type { RecipeWithItems } from "@/actions/recipes";
+import type { UserSettings } from "@/actions/settings";
 
 type RecipeCostingProps = {
   recipe: RecipeWithItems;
-  vatRate: string;
+  settings: UserSettings;
 };
 
 function calculateUnitCost(
@@ -24,11 +25,14 @@ function calculateUnitCost(
   return cost / qty;
 }
 
-function formatCurrency(value: number): string {
-  return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+function formatCurrency(value: number, currency: string): string {
+  const formatted = value.toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+  });
+  return `${currency}${formatted}`;
 }
 
-export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
+export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
   const [margin, setMargin] = useState(
     parseFloat(recipe.targetMargin) === 0 ? "" : recipe.targetMargin,
   );
@@ -67,7 +71,7 @@ export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
     const marginPercent = parseFloat(margin) || 0;
     const priceBeforeVat =
       marginPercent > 0 ? total / (1 - marginPercent / 100) : total;
-    const vatMultiplier = 1 + parseFloat(vatRate) / 100;
+    const vatMultiplier = 1 + parseFloat(settings.vatRate) / 100;
     const finalPrice = hasVat ? priceBeforeVat * vatMultiplier : priceBeforeVat;
     const profitAmount = priceBeforeVat - total;
 
@@ -78,7 +82,7 @@ export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
       sellingPrice: finalPrice,
       profit: profitAmount,
     };
-  }, [recipe.items, margin, hasVat, vatRate]);
+  }, [recipe.items, margin, hasVat, settings.vatRate]);
 
   const handleSave = () => {
     const marginVal = parseFloat(margin);
@@ -114,16 +118,18 @@ export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Ingredients</span>
-            <span>{formatCurrency(ingredientsSubtotal)}</span>
+            <span>
+              {formatCurrency(ingredientsSubtotal, settings.currency)}
+            </span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Others</span>
-            <span>{formatCurrency(othersSubtotal)}</span>
+            <span>{formatCurrency(othersSubtotal, settings.currency)}</span>
           </div>
           <div className="border-t pt-2">
             <div className="flex justify-between font-medium">
               <span>Total Cost</span>
-              <span>{formatCurrency(totalCost)}</span>
+              <span>{formatCurrency(totalCost, settings.currency)}</span>
             </div>
           </div>
         </div>
@@ -147,7 +153,7 @@ export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
 
         <div className="flex items-center justify-between">
           <label htmlFor="vat" className="text-sm font-medium">
-            Include VAT ({vatRate}%)
+            Include VAT ({settings.vatRate}%)
           </label>
           <Switch id="vat" checked={hasVat} onCheckedChange={setHasVat} />
         </div>
@@ -156,12 +162,14 @@ export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Profit</span>
             <span className="text-green-600 dark:text-green-400">
-              {formatCurrency(profit)}
+              {formatCurrency(profit, settings.currency)}
             </span>
           </div>
           <div className="flex justify-between text-lg font-bold">
             <span>Selling Price</span>
-            <span className="text-primary">{formatCurrency(sellingPrice)}</span>
+            <span className="text-primary">
+              {formatCurrency(sellingPrice, settings.currency)}
+            </span>
           </div>
         </div>
 

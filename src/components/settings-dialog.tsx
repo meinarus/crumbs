@@ -12,21 +12,27 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+} from "@/components/ui/field";
 import { Settings } from "lucide-react";
-import { updateVatRate } from "@/actions/settings";
+import { updateSettings, type UserSettings } from "@/actions/settings";
 import { toast } from "sonner";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 type SettingsDialogProps = {
-  vatRate: string;
+  settings: UserSettings;
 };
 
 export function SettingsDialog({
-  vatRate: initialVatRate,
+  settings: initialSettings,
 }: SettingsDialogProps) {
   const [open, setOpen] = useState(false);
-  const [vatRate, setVatRate] = useState(initialVatRate);
+  const [vatRate, setVatRate] = useState(initialSettings.vatRate);
+  const [currency, setCurrency] = useState(initialSettings.currency);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,7 +40,7 @@ export function SettingsDialog({
 
     startTransition(async () => {
       try {
-        await updateVatRate(vatRate);
+        await updateSettings({ vatRate, currency });
         toast.success("Settings saved successfully!");
         setOpen(false);
       } catch (error) {
@@ -45,7 +51,9 @@ export function SettingsDialog({
     });
   };
 
-  const hasChanges = vatRate !== initialVatRate;
+  const hasChanges =
+    vatRate !== initialSettings.vatRate ||
+    currency !== initialSettings.currency;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -65,6 +73,20 @@ export function SettingsDialog({
         <form onSubmit={handleSubmit}>
           <FieldGroup className="gap-4 py-4">
             <Field className="gap-2">
+              <FieldLabel htmlFor="currency">Currency</FieldLabel>
+              <Input
+                id="currency"
+                type="text"
+                maxLength={10}
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+              />
+              <FieldDescription>
+                Symbol or code to display with costs and prices.
+              </FieldDescription>
+            </Field>
+
+            <Field className="gap-2">
               <FieldLabel htmlFor="vatRate">VAT Rate (%)</FieldLabel>
               <Input
                 id="vatRate"
@@ -76,9 +98,9 @@ export function SettingsDialog({
                 onChange={(e) => setVatRate(e.target.value)}
                 placeholder="0"
               />
-              <p className="text-muted-foreground text-xs">
+              <FieldDescription>
                 This rate will be applied when VAT is enabled on recipes.
-              </p>
+              </FieldDescription>
             </Field>
           </FieldGroup>
 
