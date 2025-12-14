@@ -14,8 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Sparkles } from "lucide-react";
 import { createRecipe } from "@/actions/recipes";
+import { generateRecipe } from "@/actions/ai";
 import { toast } from "sonner";
 import type { InventoryItem } from "@/actions/inventory";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -48,6 +49,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
   const [formData, setFormData] = useState(initialFormData);
   const [ingredients, setIngredients] = useState<RecipeItemData[]>([]);
   const [others, setOthers] = useState<RecipeItemData[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const ingredientItems = useMemo(
     () => inventoryItems.filter((item) => item.category === "ingredient"),
@@ -58,6 +60,37 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
     () => inventoryItems.filter((item) => item.category === "other"),
     [inventoryItems],
   );
+
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      const recipe = await generateRecipe();
+      setFormData((prev) => ({
+        ...prev,
+        name: recipe.name,
+        instructions: recipe.instructions,
+      }));
+      setIngredients(
+        recipe.ingredients.map((i) => ({
+          id: nanoid(),
+          inventoryId: i.inventoryId,
+          quantity: i.quantity,
+        })),
+      );
+      setOthers(
+        recipe.others.map((o) => ({
+          id: nanoid(),
+          inventoryId: o.inventoryId,
+          quantity: o.quantity,
+        })),
+      );
+      toast.success("Recipe generated!");
+    } catch {
+      toast.error("Failed to generate recipe");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,6 +195,17 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
           <DialogDescription>
             Add a new recipe with ingredients and instructions.
           </DialogDescription>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGenerate}
+            disabled={isGenerating || inventoryItems.length === 0}
+            className="w-full sm:w-fit"
+          >
+            <Sparkles />
+            {isGenerating ? "Generating..." : "Generate with AI"}
+          </Button>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <FieldGroup className="gap-4 py-4">
