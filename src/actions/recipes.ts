@@ -30,10 +30,10 @@ const createRecipeSchema = z.object({
 const marginString = z.string().refine(
   (val) => {
     const num = parseFloat(val);
-    return !isNaN(num) && num >= 0 && num < 100;
+    return !isNaN(num) && num >= 0 && num <= 99.99;
   },
   {
-    message: "Margin must be between 0 and 99",
+    message: "Margin must be between 0 and 99.99",
   },
 );
 

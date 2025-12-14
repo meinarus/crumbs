@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 import { updateRecipe } from "@/actions/recipes";
+import { suggestMargin } from "@/actions/ai";
 import { toast } from "sonner";
 import type { RecipeWithItems } from "@/actions/recipes";
 import type { UserSettings } from "@/actions/settings";
@@ -39,6 +41,7 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
   const [hasVat, setHasVat] = useState(recipe.hasVat);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [isSuggesting, setIsSuggesting] = useState(false);
 
   const {
     ingredientsSubtotal,
@@ -86,8 +89,8 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
 
   const handleSave = () => {
     const marginVal = parseFloat(margin);
-    if (isNaN(marginVal) || marginVal < 0 || marginVal >= 100) {
-      setError("Margin must be between 0 and 99");
+    if (isNaN(marginVal) || marginVal < 0 || marginVal > 99.99) {
+      setError("Margin must be between 0 and 99.99");
       return;
     }
     setError(null);
@@ -105,6 +108,24 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
         toast.error(message);
       }
     });
+  };
+
+  const handleSuggestMargin = async () => {
+    setIsSuggesting(true);
+    try {
+      const ingredients = recipe.items.map((i) => i.inventory.name);
+      const result = await suggestMargin({
+        name: recipe.name,
+        totalCost,
+        ingredients,
+      });
+      setMargin(result.suggestedMargin.toString());
+      toast.success(`${result.suggestedMargin}%: ${result.reasoning}`);
+    } catch {
+      toast.error("Failed to suggest margin");
+    } finally {
+      setIsSuggesting(false);
+    }
   };
 
   const hasChanges = margin !== recipe.targetMargin || hasVat !== recipe.hasVat;
@@ -135,7 +156,19 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Target Margin (%)</label>
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium">Target Margin (%)</label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleSuggestMargin}
+              disabled={isSuggesting}
+            >
+              <Sparkles />
+              {isSuggesting ? "..." : "Suggest"}
+            </Button>
+          </div>
           <Input
             type="number"
             step="0.01"

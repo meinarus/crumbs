@@ -77,3 +77,42 @@ export async function generateRecipe(): Promise<GeneratedRecipe> {
     others: object.others,
   };
 }
+
+const marginSuggestionSchema = z.object({
+  suggestedMargin: z
+    .number()
+    .min(0)
+    .max(99.99)
+    .describe("Suggested profit margin percentage"),
+  reasoning: z.string().describe("Brief explanation for the suggestion"),
+});
+
+export type MarginSuggestion = z.infer<typeof marginSuggestionSchema>;
+
+export async function suggestMargin(recipeData: {
+  name: string;
+  totalCost: number;
+  ingredients: string[];
+}): Promise<MarginSuggestion> {
+  const { object } = await generateObject({
+    model: defaultModel,
+    schema: marginSuggestionSchema,
+    prompt: `Suggest a PROFIT MARGIN for this food business recipe.
+
+    Profit margin is defined as:
+    (price - cost) / price
+
+    Recipe: ${recipeData.name}
+    Cost: ${recipeData.totalCost.toFixed(2)}
+    Ingredients: ${recipeData.ingredients.join(", ")}
+
+    Typical profit margins (NOT food cost):
+    - Simple cooked items: 65-75%
+    - Standard cafe items: 70-80%
+    - Premium or low-volume items: 75-85%
+
+    Suggest a realistic margin with brief reasoning.`,
+  });
+
+  return object;
+}
