@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useMemo } from "react";
+import { nanoid } from "nanoid";
 import {
   Dialog,
   DialogContent,
@@ -108,7 +109,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
   const addIngredient = () => {
     setIngredients((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), inventoryId: "", quantity: "" },
+      { id: nanoid(), inventoryId: "", quantity: "" },
     ]);
   };
 
@@ -129,7 +130,7 @@ export function AddRecipeDialog({ inventoryItems }: RecipeDialogProps) {
   const addOther = () => {
     setOthers((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), inventoryId: "", quantity: "" },
+      { id: nanoid(), inventoryId: "", quantity: "" },
     ]);
   };
 

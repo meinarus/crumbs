@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { nanoid } from "nanoid";
 import {
   Dialog,
   DialogContent,
@@ -126,7 +127,7 @@ export function EditRecipeDialog({
   const addIngredient = () => {
     setIngredients((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), inventoryId: "", quantity: "" },
+      { id: nanoid(), inventoryId: "", quantity: "" },
     ]);
   };
 
@@ -147,7 +148,7 @@ export function EditRecipeDialog({
   const addOther = () => {
     setOthers((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), inventoryId: "", quantity: "" },
+      { id: nanoid(), inventoryId: "", quantity: "" },
     ]);
   };
 
