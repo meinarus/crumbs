@@ -67,7 +67,7 @@ export function RecipeDetail({
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <h1 className="text-3xl font-bold wrap-break-word">
+            <h1 className="min-w-0 text-3xl font-bold wrap-break-word">
               {recipe.name}
             </h1>
             <div className="flex w-full gap-2 max-sm:*:flex-1 sm:w-auto sm:shrink-0">
