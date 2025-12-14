@@ -8,6 +8,7 @@ import {
 import { AppSidebar, userNavItems } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarBreadcrumb } from "@/components/sidebar-breadcrumb";
+import { getUserSettings } from "@/actions/settings";
 
 export default async function UserLayout({
   children,
@@ -31,9 +32,11 @@ export default async function UserLayout({
 
   if (!user) return <>{children}</>;
 
+  const settings = await getUserSettings();
+
   return (
     <SidebarProvider>
-      <AppSidebar navItems={userNavItems} user={user} />
+      <AppSidebar navItems={userNavItems} user={user} settings={settings} />
       <SidebarInset>
         <header className="flex h-12 shrink-0 items-center gap-2 border-b">
           <div className="flex items-center gap-2 px-4">

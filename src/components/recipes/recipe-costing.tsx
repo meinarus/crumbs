@@ -11,6 +11,7 @@ import type { RecipeWithItems } from "@/actions/recipes";
 
 type RecipeCostingProps = {
   recipe: RecipeWithItems;
+  vatRate: string;
 };
 
 function calculateUnitCost(
@@ -27,7 +28,7 @@ function formatCurrency(value: number): string {
   return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }
 
-export function RecipeCosting({ recipe }: RecipeCostingProps) {
+export function RecipeCosting({ recipe, vatRate }: RecipeCostingProps) {
   const [margin, setMargin] = useState(
     parseFloat(recipe.targetMargin) === 0 ? "" : recipe.targetMargin,
   );
@@ -66,7 +67,8 @@ export function RecipeCosting({ recipe }: RecipeCostingProps) {
     const marginPercent = parseFloat(margin) || 0;
     const priceBeforeVat =
       marginPercent > 0 ? total / (1 - marginPercent / 100) : total;
-    const finalPrice = hasVat ? priceBeforeVat * 1.12 : priceBeforeVat;
+    const vatMultiplier = 1 + parseFloat(vatRate) / 100;
+    const finalPrice = hasVat ? priceBeforeVat * vatMultiplier : priceBeforeVat;
     const profitAmount = priceBeforeVat - total;
 
     return {
@@ -76,7 +78,7 @@ export function RecipeCosting({ recipe }: RecipeCostingProps) {
       sellingPrice: finalPrice,
       profit: profitAmount,
     };
-  }, [recipe.items, margin, hasVat]);
+  }, [recipe.items, margin, hasVat, vatRate]);
 
   const handleSave = () => {
     const marginVal = parseFloat(margin);
@@ -145,7 +147,7 @@ export function RecipeCosting({ recipe }: RecipeCostingProps) {
 
         <div className="flex items-center justify-between">
           <label htmlFor="vat" className="text-sm font-medium">
-            Include VAT (12%)
+            Include VAT ({vatRate}%)
           </label>
           <Switch id="vat" checked={hasVat} onCheckedChange={setHasVat} />
         </div>

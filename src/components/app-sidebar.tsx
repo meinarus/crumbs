@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
+import { SettingsDialog } from "@/components/settings-dialog";
 
 import {
   Sidebar,
@@ -88,12 +89,22 @@ export type User = {
   role: string;
 };
 
+type UserSettings = {
+  vatRate: string;
+};
+
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   navItems: NavItem[];
   user: User;
+  settings?: UserSettings;
 };
 
-export function AppSidebar({ navItems, user, ...props }: AppSidebarProps) {
+export function AppSidebar({
+  navItems,
+  user,
+  settings,
+  ...props
+}: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -199,6 +210,12 @@ export function AppSidebar({ navItems, user, ...props }: AppSidebarProps) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {settings && (
+                  <>
+                    <SettingsDialog vatRate={settings.vatRate} />
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut />
                   Log out

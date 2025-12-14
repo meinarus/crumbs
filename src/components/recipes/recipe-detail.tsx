@@ -8,6 +8,7 @@ import type { InventoryItem } from "@/actions/inventory";
 type RecipeDetailProps = {
   recipe: RecipeWithItems;
   inventoryItems: InventoryItem[];
+  vatRate: string;
 };
 
 function calculateUnitCost(
@@ -30,7 +31,11 @@ function formatCurrency(value: number): string {
   return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }
 
-export function RecipeDetail({ recipe, inventoryItems }: RecipeDetailProps) {
+export function RecipeDetail({
+  recipe,
+  inventoryItems,
+  vatRate,
+}: RecipeDetailProps) {
   const ingredients = recipe.items.filter(
     (item) => item.inventory.category === "ingredient",
   );
@@ -150,7 +155,7 @@ export function RecipeDetail({ recipe, inventoryItems }: RecipeDetailProps) {
         </div>
 
         <div className="lg:sticky lg:top-6 lg:self-start">
-          <RecipeCosting recipe={recipe} />
+          <RecipeCosting recipe={recipe} vatRate={vatRate} />
         </div>
       </div>
     </div>
