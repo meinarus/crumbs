@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -115,18 +115,18 @@ export function EditInventoryDialog({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-name">Name *</Label>
+          <FieldGroup className="gap-4 py-4">
+            <Field className="gap-2">
+              <FieldLabel htmlFor="edit-name">Name *</FieldLabel>
               <Input
                 id="edit-name"
                 value={formData.name}
                 onChange={(e) => updateField("name", e.target.value)}
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="edit-category">Category *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="edit-category">Category *</FieldLabel>
               <Select
                 value={formData.category}
                 onValueChange={(v) => updateField("category", v)}
@@ -139,19 +139,21 @@ export function EditInventoryDialog({
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="edit-supplier">Supplier</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="edit-supplier">Supplier</FieldLabel>
               <Input
                 id="edit-supplier"
                 value={formData.supplier}
                 onChange={(e) => updateField("supplier", e.target.value)}
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="edit-purchaseCost">Purchase Cost *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="edit-purchaseCost">
+                Purchase Cost *
+              </FieldLabel>
               <Input
                 id="edit-purchaseCost"
                 type="number"
@@ -159,10 +161,12 @@ export function EditInventoryDialog({
                 value={formData.purchaseCost}
                 onChange={(e) => updateField("purchaseCost", e.target.value)}
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="edit-purchaseQuantity">Purchase Qty *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="edit-purchaseQuantity">
+                Purchase Qty *
+              </FieldLabel>
               <Input
                 id="edit-purchaseQuantity"
                 type="number"
@@ -172,10 +176,10 @@ export function EditInventoryDialog({
                   updateField("purchaseQuantity", e.target.value)
                 }
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="edit-stock">Current Stock *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="edit-stock">Current Stock *</FieldLabel>
               <Input
                 id="edit-stock"
                 type="number"
@@ -183,23 +187,25 @@ export function EditInventoryDialog({
                 value={formData.stock}
                 onChange={(e) => updateField("stock", e.target.value)}
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label>Unit *</Label>
+            <Field className="gap-2">
+              <FieldLabel>Unit *</FieldLabel>
               <UnitCombobox
                 value={formData.unit}
                 onValueChange={(value) => updateField("unit", value)}
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label className="text-muted-foreground">Unit Cost</Label>
+            <Field className="gap-2">
+              <FieldLabel className="text-muted-foreground">
+                Unit Cost
+              </FieldLabel>
               <div className="text-muted-foreground text-sm">
                 {unitCostPreview} {formData.unit && `per ${formData.unit}`}
               </div>
-            </div>
-          </div>
+            </Field>
+          </FieldGroup>
 
           <DialogFooter>
             <Button

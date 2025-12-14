@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -117,19 +117,19 @@ export function AddInventoryDialog() {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name *</Label>
+          <FieldGroup className="gap-4 py-4">
+            <Field className="gap-2">
+              <FieldLabel htmlFor="name">Name *</FieldLabel>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => updateField("name", e.target.value)}
                 placeholder="Item name"
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="category">Category *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="category">Category *</FieldLabel>
               <Select
                 value={formData.category}
                 onValueChange={(v) => updateField("category", v)}
@@ -142,20 +142,20 @@ export function AddInventoryDialog() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="supplier">Supplier</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="supplier">Supplier</FieldLabel>
               <Input
                 id="supplier"
                 value={formData.supplier}
                 onChange={(e) => updateField("supplier", e.target.value)}
                 placeholder="Supplier name"
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="purchaseCost">Purchase Cost *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="purchaseCost">Purchase Cost *</FieldLabel>
               <Input
                 id="purchaseCost"
                 type="number"
@@ -164,10 +164,10 @@ export function AddInventoryDialog() {
                 onChange={(e) => updateField("purchaseCost", e.target.value)}
                 placeholder="0.00"
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="purchaseQuantity">Purchase Qty *</Label>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="purchaseQuantity">Purchase Qty *</FieldLabel>
               <Input
                 id="purchaseQuantity"
                 type="number"
@@ -178,23 +178,25 @@ export function AddInventoryDialog() {
                 }
                 placeholder="0"
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label>Unit *</Label>
+            <Field className="gap-2">
+              <FieldLabel>Unit *</FieldLabel>
               <UnitCombobox
                 value={formData.unit}
                 onValueChange={(value) => updateField("unit", value)}
               />
-            </div>
+            </Field>
 
-            <div className="grid gap-2">
-              <Label className="text-muted-foreground">Unit Cost</Label>
+            <Field className="gap-2">
+              <FieldLabel className="text-muted-foreground">
+                Unit Cost
+              </FieldLabel>
               <div className="text-muted-foreground text-sm">
                 {unitCostPreview} {formData.unit && `per ${formData.unit}`}
               </div>
-            </div>
-          </div>
+            </Field>
+          </FieldGroup>
 
           <DialogFooter>
             <Button

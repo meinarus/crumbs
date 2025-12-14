@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { addStock, type InventoryItem } from "@/actions/inventory";
 
 type AddStockDialogProps = {
@@ -59,28 +59,31 @@ export function AddStockDialog({
             Add quantity to your existing stock.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label>Current Stock</Label>
-            <div className="text-muted-foreground text-sm font-medium">
-              {parseFloat(item.stock).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-              })}{" "}
-              {item.unit}
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="add-stock-qty">Quantity to Add *</Label>
-            <Input
-              id="add-stock-qty"
-              type="number"
-              step="any"
-              value={quantityToAdd}
-              onChange={(e) => setQuantityToAdd(e.target.value)}
-              placeholder="0"
-              autoFocus
-            />
-          </div>
+        <form onSubmit={handleSubmit}>
+          <FieldGroup className="gap-4 py-4">
+            <Field className="gap-2">
+              <FieldLabel>Current Stock</FieldLabel>
+              <div className="text-muted-foreground text-sm font-medium">
+                {parseFloat(item.stock).toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })}{" "}
+                {item.unit}
+              </div>
+            </Field>
+
+            <Field className="gap-2">
+              <FieldLabel htmlFor="add-stock-qty">Quantity to Add *</FieldLabel>
+              <Input
+                id="add-stock-qty"
+                type="number"
+                step="any"
+                value={quantityToAdd}
+                onChange={(e) => setQuantityToAdd(e.target.value)}
+                placeholder="0"
+                autoFocus
+              />
+            </Field>
+          </FieldGroup>
 
           <DialogFooter>
             <Button
