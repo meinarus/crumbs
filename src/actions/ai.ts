@@ -107,8 +107,8 @@ export async function suggestMargin(recipeData: {
     Ingredients: ${recipeData.ingredients.join(", ")}
 
     Typical profit margins (NOT food cost):
-    - Simple cooked items: 65-75%
-    - Standard cafe items: 70-80%
+    - Simple cooked / commodity items: 65-70%
+    - Standard cafe menu items: 70-75% 
     - Premium or low-volume items: 75-85%
 
     Suggest a realistic margin with brief reasoning.`,

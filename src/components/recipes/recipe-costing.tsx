@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { updateRecipe } from "@/actions/recipes";
 import { suggestMargin } from "@/actions/ai";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [reasoning, setReasoning] = useState<string | null>(null);
 
   const {
     ingredientsSubtotal,
@@ -112,6 +114,7 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
 
   const handleSuggestMargin = async () => {
     setIsSuggesting(true);
+    setReasoning(null);
     try {
       const ingredients = recipe.items.map((i) => i.inventory.name);
       const result = await suggestMargin({
@@ -120,9 +123,9 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
         ingredients,
       });
       setMargin(result.suggestedMargin.toString());
-      toast.success(`${result.suggestedMargin}%: ${result.reasoning}`);
+      setReasoning(`${result.suggestedMargin}%: ${result.reasoning}`);
     } catch {
-      toast.error("Failed to suggest margin");
+      setReasoning("Failed to suggest margin");
     } finally {
       setIsSuggesting(false);
     }
@@ -182,6 +185,21 @@ export function RecipeCosting({ recipe, settings }: RecipeCostingProps) {
             placeholder="0"
           />
           {error && <p className="text-destructive text-sm">{error}</p>}
+          {reasoning && (
+            <Alert className="relative">
+              <Sparkles />
+              <AlertDescription className="pr-5">{reasoning}</AlertDescription>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 h-6 w-6"
+                onClick={() => setReasoning(null)}
+              >
+                <X />
+              </Button>
+            </Alert>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
